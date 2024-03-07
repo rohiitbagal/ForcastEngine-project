@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ForcastEngine</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="card">
+      <div class="search">
+        <input type="text" placeholder="enter city name" spellcheck="false" />
+        <button><img src="search.png" /></button>
+      </div>
+      <div class="weather">
+        <img src="rain.png" class="weather-icon" />
+        <h1 class="temp">22°c</h1>
+        <h2 class="city">New York</h2>
+        <div class="details">
+          <div class="col">
+            <img src="humidity.png" />
+            <div>
+              <p class="humidity">50%</p>
+              <p>Humidity</p>
+            </div>
+          </div>
+          <div class="col">
+            <img src="wind.png" />
+            <div>
+              <p class="wind">15km/h</p>
+              <p>Wind Speed</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let weather = {
+        apiKey: "API KEY GOES HERE",
+        fetchWeather: function (city) {
+          fetch(
+            "https://api.openweathermap.org/data/2.5/weather?q=" +
+              city +
+              "&units=metric&appid=" +
+              this.apiKey
+          )
+            .then((response) => {
+              if (!response.ok) {
+                alert("No weather found.");
+                throw new Error("No weather found.");
+              }
+              return response.json();
+            })
+            .then((data) => this.displayWeather(data));
+        },
+        displayWeather: function (data) {
+          const { name } = data;
+          const { icon, description } = data.weather[0];
+          const { temp, humidity } = data.main;
+          const { speed } = data.wind;
+          document.querySelector(".city").innerText = "Weather in " + name;
+          document.querySelector(".icon").src =
+            "https://openweathermap.org/img/wn/" + icon + ".png";
+          document.querySelector(".description").innerText = description;
+          document.querySelector(".temp").innerText = temp + "°C";
+          document.querySelector(".humidity").innerText =
+            "Humidity: " + humidity + "%";
+          document.querySelector(".wind").innerText =
+            "Wind speed: " + speed + " km/h";
+          document.querySelector(".weather").classList.remove("loading");
+          document.body.style.backgroundImage =
+            "url('https://source.unsplash.com/1600x900/?" + name + "')";
+        },
+        search: function () {
+          this.fetchWeather(document.querySelector(".search-bar").value);
+        },
+      };
+
+      document
+        .querySelector(".search button")
+        .addEventListener("click", function () {
+          weather.search();
+        });
+
+      document
+        .querySelector(".search-bar")
+        .addEventListener("keyup", function (event) {
+          if (event.key == "Enter") {
+            weather.search();
+          }
+        });
+
+      weather.fetchWeather("Denver");
+    </script>
+    const responce=await fetch(apiurl+`&appid=${apikey}`); const data=await
+    response.json(); console.log(data);
+  </body>
+</html>
